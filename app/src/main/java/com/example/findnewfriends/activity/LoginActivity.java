@@ -1,4 +1,4 @@
-package com.example.findnewfriends;
+package com.example.findnewfriends.activity;
 
 
 import android.os.Bundle;
@@ -6,7 +6,6 @@ import android.os.Bundle;
 
 
 import android.app.Activity;
-import android.os.Bundle;
 import android.content.Intent;
 import android.view.View;
 import android.widget.TextView;
@@ -19,6 +18,7 @@ import com.digits.sdk.android.DigitsAuthButton;
 import com.digits.sdk.android.DigitsException;
 import com.digits.sdk.android.DigitsSession;
 
+import com.example.findnewfriends.R;
 import com.twitter.sdk.android.Twitter;
 import com.twitter.sdk.android.core.Callback;
 import com.twitter.sdk.android.core.Result;
@@ -69,7 +69,7 @@ public class LoginActivity extends Activity {
                 Toast.makeText(getApplicationContext(),
                         getResources().getString(R.string.toast_twitter_signin_success),
                         Toast.LENGTH_SHORT).show();
-                startThemeChooser();
+                startOptionChooser();
             }
 
             @Override
@@ -91,7 +91,7 @@ public class LoginActivity extends Activity {
                 Toast.makeText(getApplicationContext(),
                         getResources().getString(R.string.toast_twitter_digits_success),
                         Toast.LENGTH_SHORT).show();
-                startThemeChooser();
+                startOptionChooser();
             }
 
             @Override
@@ -111,7 +111,7 @@ public class LoginActivity extends Activity {
             @Override
             public void onClick(View v) {
 //                Crashlytics.log("Login: skipped login");
-                startThemeChooser();
+                startOptionChooser();
 //                overridePendingTransition(R.anim.slide_down, R.anim.slide_up);
             }
         });
@@ -124,8 +124,8 @@ public class LoginActivity extends Activity {
         twitterButton.onActivityResult(requestCode, resultCode, data);
     }
 
-    private void startThemeChooser() {
-        final Intent themeChooserIntent = new Intent(LoginActivity.this, OptionActivity.class);
-        startActivity(themeChooserIntent);
+    private void startOptionChooser() {
+        final Intent optionChooserIntent = new Intent(LoginActivity.this, OptionChooserActivity.class);
+        startActivity(optionChooserIntent);
     }
 }

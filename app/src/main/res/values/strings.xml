@@ -11,4 +11,27 @@
     <string name="toast_twitter_signin_success">Login success: twitter account active</string>
     <string name="toast_twitter_digits_success">Login success: digits account active</string>
     <string name="skip_login">Skip</string>
+    <string name="search_tweets">Search Tweets</string>
+    <string name="search_profile">Search Profile</string>
+    <string name="search_timeline">Search Timeline</string>
+    <string name="prompt_user_interest">Please enter your interest:</string>
+    <string name="prompt_user_location">Please enter your location:</string>
+    <string name="prompt_search_radius">Please choose your search radius (in miles):</string>
+    <string name="prompt_username">Please enter a username (optional):</string>
+    <string name="heat_map_option">Heat Map</string>
+    <string name="google_map_option">Google Map</string>
+    <string name="profile_list_option">Profile List</string>
+    <string name="tag_cloud_option">Tag Cloud</string>
+    <string name="tweets_list_option">Tweets List</string>
+    <string name="created_at">Creation Time</string>
+    <string name="tweet_text">Tweet Text</string>
+
+
+
+
+    <string name="user_screen_name_holder">\Screen Name</string>
+    <string name="user_profile_holder">Profile Description</string>
+    <string name="profile_picture">Profile Picture</string>
+
+
 </resources>

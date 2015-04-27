@@ -1,8 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="grayish_blue">#8899A6</color>
+
+
+    <color name="black_blue">#053D6A</color>
+    <color name="dark_blue">#094F89</color>
     <color name="twitter_dark_blue">#0084b4</color>
     <color name="twitter_logo_blue">#00aced</color>
+    <color name="grayish_blue">#8899A6</color>
     <color name="twitter_light_blue">#c0deed</color>
     <color name="twitter_pure_blue">#1dcaff</color>
     <color name="background_beige">#FFEDD4</color>
@@ -10,6 +14,9 @@
     <color name="green">#00A79B</color>
     <color name="white">#FFF</color>
     <color name="mopub_brown">#371F1F</color>
+    <color name="black">#000000</color>
+    <color name="light_black">#2E2E2E</color>
+
 
     <color name="full_transparent">#00000000</color>
     <color name="not_so_transparent">#44000000</color>

@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:background="@drawable/background"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="25dp"
+        android:layout_marginLeft="25dp"
+      android:textColor="@color/white"
+        android:id="@+id/interest_prompt"
+        android:text="@string/prompt_user_interest"
+        android:textSize="15dp"/>
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:layout_marginLeft="25dp"
+        android:textColor="@color/white"
+        android:id="@+id/interest_input"
+        android:textSize="18dp"
+        android:hint="e.g. hiking"
+        android:textColorHint="@color/twitter_dark_blue"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:layout_marginLeft="25dp"
+        android:textColor="@color/white"
+        android:id="@+id/location_prompt"
+        android:text="@string/prompt_user_location"
+        android:textSize="15dp"/>
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:layout_marginLeft="25dp"
+        android:textColor="@color/white"
+        android:id="@+id/location_input"
+        android:hint="Current Location (default)"
+        android:textColorHint="@color/twitter_dark_blue"
+        android:textSize="18dp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:layout_marginLeft="25dp"
+        android:textColor="@color/white"
+        android:id="@+id/radius_prompt"
+        android:text="@string/prompt_search_radius"
+        android:textSize="15dp"/>
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:layout_marginLeft="25dp"
+        android:id="@+id/radius_input"
+        android:textColor="@color/white"
+        android:hint="10 (default)"
+        android:textColorHint="@color/twitter_dark_blue"
+        android:textSize="18dp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:layout_marginLeft="25dp"
+        android:textColor="@color/white"
+        android:id="@+id/username_prompt"
+        android:text="@string/prompt_username"
+        android:textSize="15dp"/>
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:layout_marginLeft="25dp"
+        android:textColor="@color/white"
+        android:id="@+id/username_input"
+        android:hint="Current User(default)"
+        android:textColorHint="@color/twitter_dark_blue"
+        android:textSize="18dp"/>
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/search_tweets"
+        android:layout_marginTop="30dp"
+        android:layout_marginLeft="25dp"
+        android:layout_marginRight="25dp"
+        android:background="@drawable/custom_button"
+        android:textColor="@color/white"
+        android:id="@+id/search_tweets_button"
+        android:layout_gravity="center_horizontal" />
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="25dp"
+        android:layout_marginLeft="25dp"
+        android:layout_marginRight="25dp"
+        android:background="@drawable/custom_button"
+        android:textColor="@color/white"
+        android:textColorHighlight="@color/twitter_pure_blue"
+        android:text="@string/search_profile"
+        android:id="@+id/search_profile_button" />
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="25dp"
+        android:layout_marginLeft="25dp"
+        android:layout_marginRight="25dp"
+        android:background="@drawable/custom_button"
+        android:textColor="@color/white"
+        android:text="@string/search_timeline"
+        android:id="@+id/search_timeline_button" />
+
+</LinearLayout>

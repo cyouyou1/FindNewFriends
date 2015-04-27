@@ -16,7 +16,7 @@
         android:layout_height="wrap_content"
         android:contentDescription="@string/content_desc_icon"
         android:layout_centerHorizontal="true"
-        android:src="@drawable/ic_logo2"/>
+        android:src="@drawable/ic_logo"/>
 
     <TextView
         android:layout_width="wrap_content"
@@ -35,6 +35,8 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/app_name"
+        android:layout_marginLeft="25dp"
+        android:layout_marginRight="25dp"
         android:layout_marginTop="100dp"
         android:layout_centerHorizontal="true"/>
 
@@ -43,6 +45,8 @@
         android:layout_below="@id/twitter_login_button"
         android:layout_marginTop="30dp"
         android:layout_centerHorizontal="true"
+        android:layout_marginLeft="25dp"
+        android:layout_marginRight="25dp"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"/>
 
@@ -51,10 +55,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/digit_auth_button"
-        android:layout_marginTop="45dp"
+        android:layout_marginTop="40dp"
         android:text="@string/skip_login"
-        android:textSize="20sp"
-        android:textColor="@color/white"
+        android:textSize="16sp"
+        android:textColor="@color/twitter_logo_blue"
         android:textColorHighlight="@color/twitter_dark_blue"
         android:gravity="center_horizontal"
        android:id="@+id/skip"/>
