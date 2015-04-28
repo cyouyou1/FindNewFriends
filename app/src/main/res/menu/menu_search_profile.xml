@@ -22,5 +22,12 @@
         android:orderInCategory="102"
         app:showAsAction="always"/>
 
+    <item android:id="@+id/exit"
+        android:title="@string/google_map_option"
+        android:icon="@drawable/exit_icon"
+        android:orderInCategory="103"
+        app:showAsAction="always" />
+
+
 
 </menu>

@@ -2,55 +2,58 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content" >
-//TODO: adjust format
+
     <ImageView
         android:id="@+id/imageView1"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentTop="true"
-        android:layout_marginTop="20dp"
-        android:layout_marginBottom="10dp"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_margin="10dp"
         android:contentDescription="@string/profile_picture"/>
 
-    <TextView
-        android:id="@+id/textView1"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="10dp"
         android:layout_toRightOf="@+id/imageView1"
-        android:layout_centerVertical="true"
-        android:text="@string/tweet_text"
-        android:textColor="@color/white"
-        android:textSize="15sp"
-         />
+        android:layout_margin="10dp"
+        android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/textView2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/created_at"
-        android:layout_below="@+id/textView1"
-        android:layout_marginTop="20dp"
-        android:layout_marginRight="20dp"
-        android:layout_alignParentRight="true"
-        android:textColor="@color/twitter_light_blue"
-        android:textSize="10sp"/>
+        <RelativeLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content">
 
-    <TextView
-        android:id="@+id/textView3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/user_screen_name_holder"
-        android:layout_below="@+id/textView1"
-        android:layout_toRightOf="@+id/imageView1"
-        android:layout_marginTop="20dp"
-        android:layout_marginLeft="20dp"
-        android:layout_marginBottom="10dp"
-        android:textColor="@color/twitter_dark_blue"
-        android:textSize="12sp"
-        android:textStyle="bold"/>
+            <TextView
+                android:id="@+id/textView3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/user_screen_name_holder"
+                android:layout_alignParentLeft="true"
+                android:textColor="@color/white"
+                android:textSize="14sp"
+                android:textStyle="bold"/>
 
 
+            <TextView
+                android:id="@+id/textView2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/created_at"
+                android:layout_alignParentRight="true"
+                android:textColor="@color/white"
+                android:layout_marginTop="2dp"
+                android:textSize="8sp"/>
+
+        </RelativeLayout>
+
+
+
+        <TextView
+            android:id="@+id/textView1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/tweet_text"
+            android:textColor="@color/white"
+            android:textSize="13sp"/>
+
+    </LinearLayout>
 
 </RelativeLayout>

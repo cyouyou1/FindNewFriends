@@ -30,8 +30,6 @@ import com.twitter.sdk.android.core.identity.TwitterLoginButton;
 import io.fabric.sdk.android.Fabric;
 
 
-//import com.example.findfriends.SessionRecorder;
-//TODO: figure out sessionrecorder
 
 
 public class LoginActivity extends Activity {
@@ -43,6 +41,7 @@ public class LoginActivity extends Activity {
 
     private TwitterLoginButton twitterButton;
     private DigitsAuthButton phoneButton;
+    private String current_username;
 
 
     @Override
@@ -65,10 +64,11 @@ public class LoginActivity extends Activity {
         twitterButton.setCallback(new Callback<TwitterSession>() {
             @Override
             public void success(Result<TwitterSession> result) {
-//                SessionRecorder.recordSessionActive("Login: twitter account active", result.data);
                 Toast.makeText(getApplicationContext(),
                         getResources().getString(R.string.toast_twitter_signin_success),
                         Toast.LENGTH_SHORT).show();
+                current_username = result.data.getUserName();
+
                 startOptionChooser();
             }
 
@@ -87,10 +87,8 @@ public class LoginActivity extends Activity {
         phoneButton.setCallback(new AuthCallback() {
             @Override
             public void success(DigitsSession digitsSession, String phoneNumber) {
-//                SessionRecorder.recordSessionActive("Login: digits account active", digitsSession);
                 Toast.makeText(getApplicationContext(),
-                        getResources().getString(R.string.toast_twitter_digits_success),
-                        Toast.LENGTH_SHORT).show();
+                        getResources().getString(R.string.toast_twitter_digits_success),Toast.LENGTH_SHORT).show();
                 startOptionChooser();
             }
 
@@ -110,9 +108,7 @@ public class LoginActivity extends Activity {
         skipButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                Crashlytics.log("Login: skipped login");
                 startOptionChooser();
-//                overridePendingTransition(R.anim.slide_down, R.anim.slide_up);
             }
         });
     }
@@ -126,6 +122,8 @@ public class LoginActivity extends Activity {
 
     private void startOptionChooser() {
         final Intent optionChooserIntent = new Intent(LoginActivity.this, OptionChooserActivity.class);
+        optionChooserIntent.putExtra("CURRENT_USERNAME", current_username);
         startActivity(optionChooserIntent);
+        finish();
     }
 }

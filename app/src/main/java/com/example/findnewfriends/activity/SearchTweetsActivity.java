@@ -98,6 +98,9 @@ public class SearchTweetsActivity extends AppCompatActivity {
             intent.putExtra("URL", searchUrl);
             startActivity(intent);
             return true;
+        }else if (id == R.id.exit ) {
+            finish();
+            return true;
         }
 
         return false;

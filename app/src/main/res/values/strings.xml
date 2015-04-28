@@ -14,10 +14,12 @@
     <string name="search_tweets">Search Tweets</string>
     <string name="search_profile">Search Profile</string>
     <string name="search_timeline">Search Timeline</string>
-    <string name="prompt_user_interest">Please enter your interest:</string>
-    <string name="prompt_user_location">Please enter your location:</string>
-    <string name="prompt_search_radius">Please choose your search radius (in miles):</string>
-    <string name="prompt_username">Please enter a username (optional):</string>
+    <string name="sign_out">Sign Me Out</string>
+    <string name="prompt_user_interest">Interest</string>
+    <string name="prompt_user_location">Location</string>
+    <string name="prompt_search_radius">Search Radius(miles)</string>
+    <string name="prompt_result_number">Results Listed</string>
+    <string name="prompt_username">Twitter Username</string>
     <string name="heat_map_option">Heat Map</string>
     <string name="google_map_option">Google Map</string>
     <string name="profile_list_option">Profile List</string>

@@ -5,15 +5,27 @@
     android:background="@drawable/background"
     android:layout_height="match_parent">
 
+
+    <TextView
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="25dp"
+    android:layout_marginLeft="25dp"
+    android:textColor="@color/white"
+    android:id="@+id/welcome_message"
+    android:textStyle="bold"
+    android:textSize="18dp"/>
+
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="25dp"
         android:layout_marginLeft="25dp"
-      android:textColor="@color/white"
+        android:textColor="@color/green"
         android:id="@+id/interest_prompt"
         android:text="@string/prompt_user_interest"
-        android:textSize="15dp"/>
+        android:textStyle="bold"
+        android:textSize="16dp"/>
 
     <EditText
         android:layout_width="wrap_content"
@@ -22,19 +34,20 @@
         android:layout_marginLeft="25dp"
         android:textColor="@color/white"
         android:id="@+id/interest_input"
-        android:textSize="18dp"
-        android:hint="e.g. hiking"
-        android:textColorHint="@color/twitter_dark_blue"/>
+        android:textSize="15dp"
+        android:hint="Enter your interests or hobbies, e.g. hiking"
+        android:textColorHint="@color/grey"/>
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="15dp"
+        android:layout_marginTop="8dp"
         android:layout_marginLeft="25dp"
-        android:textColor="@color/white"
+        android:textColor="@color/green"
         android:id="@+id/location_prompt"
         android:text="@string/prompt_user_location"
-        android:textSize="15dp"/>
+        android:textStyle="bold"
+        android:textSize="16dp"/>
 
     <EditText
         android:layout_width="wrap_content"
@@ -43,40 +56,78 @@
         android:layout_marginLeft="25dp"
         android:textColor="@color/white"
         android:id="@+id/location_input"
-        android:hint="Current Location (default)"
-        android:textColorHint="@color/twitter_dark_blue"
-        android:textSize="18dp"/>
+        android:hint="Enter search location (Default: current location)"
+        android:textColorHint="@color/grey"
+        android:textSize="15dp"/>
 
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:layout_marginLeft="25dp"
+        android:layout_marginRight="25dp">
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:orientation="vertical">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/green"
+            android:id="@+id/radius_prompt"
+            android:text="@string/prompt_search_radius"
+            android:textStyle="bold"
+            android:textSize="16dp"/>
+
+        <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:id="@+id/radius_input"
+            android:textColor="@color/white"
+            android:hint="Default: 10"
+            android:textColorHint="@color/grey"
+            android:textSize="15dp"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:orientation="vertical">
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="15dp"
-        android:layout_marginLeft="25dp"
-        android:textColor="@color/white"
-        android:id="@+id/radius_prompt"
-        android:text="@string/prompt_search_radius"
-        android:textSize="15dp"/>
+        android:textColor="@color/green"
+        android:id="@+id/result_number_prompt"
+        android:text="@string/prompt_result_number"
+        android:textStyle="bold"
+        android:textSize="16dp"/>
 
     <EditText
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="5dp"
-        android:layout_marginLeft="25dp"
-        android:id="@+id/radius_input"
+        android:id="@+id/result_number_input"
         android:textColor="@color/white"
-        android:hint="10 (default)"
-        android:textColorHint="@color/twitter_dark_blue"
-        android:textSize="18dp"/>
+        android:hint="Default: 50"
+        android:textColorHint="@color/grey"
+        android:textSize="15dp"/>
+    </LinearLayout>
+    </RelativeLayout>
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="15dp"
+        android:layout_marginTop="8dp"
         android:layout_marginLeft="25dp"
-        android:textColor="@color/white"
+        android:textColor="@color/green"
         android:id="@+id/username_prompt"
         android:text="@string/prompt_username"
-        android:textSize="15dp"/>
+        android:textStyle="bold"
+        android:textSize="16dp"/>
 
     <EditText
         android:layout_width="wrap_content"
@@ -85,26 +136,26 @@
         android:layout_marginLeft="25dp"
         android:textColor="@color/white"
         android:id="@+id/username_input"
-        android:hint="Current User(default)"
-        android:textColorHint="@color/twitter_dark_blue"
-        android:textSize="18dp"/>
+        android:hint="Default: current username"
+        android:textColorHint="@color/grey"
+        android:textSize="15dp"/>
 
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/search_tweets"
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="8dp"
         android:layout_marginLeft="25dp"
         android:layout_marginRight="25dp"
         android:background="@drawable/custom_button"
         android:textColor="@color/white"
         android:id="@+id/search_tweets_button"
-        android:layout_gravity="center_horizontal" />
+        android:textColorHighlight="@color/twitter_pure_blue" />
 
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="25dp"
+        android:layout_marginTop="10dp"
         android:layout_marginLeft="25dp"
         android:layout_marginRight="25dp"
         android:background="@drawable/custom_button"
@@ -116,12 +167,25 @@
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="25dp"
+        android:layout_marginTop="10dp"
         android:layout_marginLeft="25dp"
         android:layout_marginRight="25dp"
         android:background="@drawable/custom_button"
         android:textColor="@color/white"
+        android:textColorHighlight="@color/twitter_pure_blue"
         android:text="@string/search_timeline"
         android:id="@+id/search_timeline_button" />
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/sign_out"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="25dp"
+        android:layout_marginRight="25dp"
+        android:background="@drawable/custom_button"
+        android:textColor="@color/white"
+        android:id="@+id/sign_out_button"
+        android:textColorHighlight="@color/twitter_pure_blue" />
 
 </LinearLayout>

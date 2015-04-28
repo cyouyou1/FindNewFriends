@@ -29,7 +29,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class SearchProfileActivity extends AppCompatActivity {
-    //TODO: load pic when scrolling, get loction and radius working
+    //TODO: load pic when scrolling, get location and radius working, modify database
     private ListView lv;
     private ProgressBar pb;
     private List<MyTask> tasks;
@@ -106,6 +106,9 @@ public class SearchProfileActivity extends AppCompatActivity {
             Intent intent = new Intent(SearchProfileActivity.this, TagCloudActivity.class);
             intent.putExtra("URL", searchUrl);
             startActivity(intent);
+            return true;
+        }else if (id == R.id.exit ) {
+            finish();
             return true;
         }
 
