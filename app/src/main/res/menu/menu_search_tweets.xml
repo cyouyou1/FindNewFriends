@@ -14,9 +14,9 @@
         android:orderInCategory="101"
         app:showAsAction="always" />
 
-    <item android:id="@+id/exit"
-        android:title="@string/google_map_option"
-        android:icon="@drawable/exit_icon"
+    <item android:id="@+id/goback"
+        android:title="@string/goback_option"
+        android:icon="@drawable/goback_icon"
         android:orderInCategory="102"
         app:showAsAction="always" />
 

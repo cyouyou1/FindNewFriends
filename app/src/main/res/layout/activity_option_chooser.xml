@@ -19,7 +19,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="25dp"
+        android:layout_marginTop="15dp"
         android:layout_marginLeft="25dp"
         android:textColor="@color/green"
         android:id="@+id/interest_prompt"
@@ -35,7 +35,7 @@
         android:textColor="@color/white"
         android:id="@+id/interest_input"
         android:textSize="15dp"
-        android:hint="Enter your interests or hobbies, e.g. hiking"
+        android:hint="Enter your interests, e.g. hiking"
         android:textColorHint="@color/grey"/>
 
     <TextView
@@ -56,7 +56,7 @@
         android:layout_marginLeft="25dp"
         android:textColor="@color/white"
         android:id="@+id/location_input"
-        android:hint="Enter search location (Default: current location)"
+        android:hint="Enter location (Default: current location)"
         android:textColorHint="@color/grey"
         android:textSize="15dp"/>
 

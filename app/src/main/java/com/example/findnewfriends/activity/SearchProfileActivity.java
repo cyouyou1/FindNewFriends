@@ -30,6 +30,7 @@ import java.util.List;
 
 public class SearchProfileActivity extends AppCompatActivity {
     //TODO: load pic when scrolling, get location and radius working, modify database
+    //TODO change sign out icon to go back icon
     private ListView lv;
     private ProgressBar pb;
     private List<MyTask> tasks;
@@ -107,7 +108,7 @@ public class SearchProfileActivity extends AppCompatActivity {
             intent.putExtra("URL", searchUrl);
             startActivity(intent);
             return true;
-        }else if (id == R.id.exit ) {
+        }else if (id == R.id.goback ) {
             finish();
             return true;
         }

@@ -22,6 +22,7 @@
     <string name="prompt_username">Twitter Username</string>
     <string name="heat_map_option">Heat Map</string>
     <string name="google_map_option">Google Map</string>
+    <string name="goback_option">Go Back</string>
     <string name="profile_list_option">Profile List</string>
     <string name="tag_cloud_option">Tag Cloud</string>
     <string name="tweets_list_option">Tweets List</string>
