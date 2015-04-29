@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.location.Location;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
@@ -29,15 +30,22 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class SearchTweetsActivity extends AppCompatActivity {
+    public static final int DEFAULT_RADIUS = 10;
     //TODO: load pic when scrolling
     private ListView lv;
     private ProgressBar pb;
     private List<MyTask> tasks;
-    private List<Tweet> tweetsList;
+    private List<Tweet> oldTweetsList;
+    private List<Tweet> newTweetsList;
     private String searchUrl;
+    private double latitude;
+    private double longitude;
+    private double radius_meters;
+    private int resultNumber;
 
-    private final String BASEURL_SEARCH_TWEETS  = "https://api.mongolab.com/api/1/databases/project_db/collections/simple_tweets/?";
-    private final String APIKEY_SEARCH_TWEETS = "zmTpDSixS5MN2Kb6txgHDM9GvxE5sksX";
+
+    private final String BASEURL_SEARCH_TWEETS  = "https://api.mongolab.com/api/1/databases/twitter_db/collections/geo_tweets/?";
+    private final String APIKEY_SEARCH_TWEETS = "5xOXnbzry10fFTmd28DOX4y_TzKwYT4n";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,13 +58,34 @@ public class SearchTweetsActivity extends AppCompatActivity {
         String location_string = extras.getString("EXTRA_LOCATION");
         String radius_string = extras.getString("EXTRA_RADIUS");
         String interest_string = extras.getString("EXTRA_INTEREST");
-//
+        String resultNumber_string = extras.getString("EXTRA_RESULT_NUMBER");
+        double currentLat = extras.getDouble("EXTRA_CURRENT_LAT");
+        double currentLng = extras.getDouble("EXTRA_CURRENT_LNG");
+        double lat = extras.getDouble("EXTRA_LAT");
+        double lng = extras.getDouble("EXTRA_LNG");
 
-        String location_query = Uri.encode(location_string);
-        String radius_query = Uri.encode(radius_string);
+        if(resultNumber_string.equals("")){
+            resultNumber = 50;
+        }else {
+            resultNumber = Integer.parseInt(resultNumber_string);
+        }
+        if(location_string.equals("")){
+            latitude = currentLat;
+            longitude = currentLng;
+        }else {
+            latitude = lat;
+            longitude = lng;
+        }
+
+        if(radius_string.equals("")){
+            radius_meters = DEFAULT_RADIUS * 1609.34;
+        }else {
+            radius_meters = Double.parseDouble(radius_string) * 1609.34;
+        }
+
         String interest_query = Uri.encode(interest_string);
 
-        searchUrl = BASEURL_SEARCH_TWEETS + "q={$text:{$search:%22" + interest_query + "%22}}&l=100&apiKey=" + APIKEY_SEARCH_TWEETS;
+        searchUrl = BASEURL_SEARCH_TWEETS + "q={$text:{$search:%22" + interest_query + "%22}}&apiKey=" + APIKEY_SEARCH_TWEETS;
 
 
 
@@ -113,7 +142,7 @@ public class SearchTweetsActivity extends AppCompatActivity {
     }
 
     protected void updateDisplay() {
-        TweetAdapter adapter = new TweetAdapter(this, R.layout.tweet, tweetsList);
+        TweetAdapter adapter = new TweetAdapter(this, R.layout.tweet, newTweetsList);
         lv.setAdapter(adapter);
     }
 
@@ -139,24 +168,33 @@ public class SearchTweetsActivity extends AppCompatActivity {
         protected List<Tweet> doInBackground(String... params) {
 
             String content = HttpManager.getData(params[0]);
-            tweetsList = TweetJSONParser.parseFeed(content);
+            oldTweetsList = TweetJSONParser.parseFeed(content);
+            int count = 0;
+            newTweetsList = new ArrayList<>();
 
-            for (Tweet tweet:tweetsList){
-                try {
-                    String imageUrl = tweet.getProfile_image_url();
-                    if(imageUrl != null){
-                        InputStream in = (InputStream) new URL(imageUrl).getContent();
-                        Bitmap bitmap = BitmapFactory.decodeStream(in);
-                        tweet.setProfile_pic(bitmap);
-                        in.close();
+            for (Tweet tweet:oldTweetsList) {
+                double tweet_lat = tweet.getLatLng().latitude;
+                double twee_lng = tweet.getLatLng().longitude;
+                float[]distance = new float[3];
+                Location.distanceBetween(tweet_lat, twee_lng, latitude, longitude,distance);
+                if ((double)distance[0] <= radius_meters && count < resultNumber) {
+                    count ++;
+                    try {
+                        String imageUrl = tweet.getProfile_image_url();
+                        if (imageUrl != null) {
+                            InputStream in = (InputStream) new URL(imageUrl).getContent();
+                            Bitmap bitmap = BitmapFactory.decodeStream(in);
+                            tweet.setProfile_pic(bitmap);
+                            in.close();
+                        }
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
                     }
-
-                } catch (Exception e){
-                    e.printStackTrace();
+                    newTweetsList.add(tweet);
                 }
-
             }
-            return tweetsList;
+            return newTweetsList;
 
 
         }
@@ -176,9 +214,6 @@ public class SearchTweetsActivity extends AppCompatActivity {
             updateDisplay();
 
         }
-
-
-
     }
 }
 

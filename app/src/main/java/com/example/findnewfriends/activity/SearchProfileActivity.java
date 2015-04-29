@@ -20,6 +20,8 @@ import android.widget.Toast;
 import com.example.findnewfriends.model.HttpManager;
 import com.example.findnewfriends.R;
 import com.example.findnewfriends.model.Tweet;
+import com.example.findnewfriends.model.UserProfile;
+import com.example.findnewfriends.parser.ProfileJSONParser;
 import com.example.findnewfriends.parser.TweetJSONParser;
 import com.example.findnewfriends.adapter.ProfileAdapter;
 
@@ -34,9 +36,10 @@ public class SearchProfileActivity extends AppCompatActivity {
     private ListView lv;
     private ProgressBar pb;
     private List<MyTask> tasks;
-    private List<Tweet> tweetsList;
+    private List<UserProfile> profileList;
     private String searchUrl;
-    private final String BASEURL_SEARCH_PROFILE = "https://api.mongolab.com/api/1/databases/twitter_db/collections/geo_tweets/?";
+    private String heatmapUrl;
+    private final String BASEURL_SEARCH_PROFILE = "https://api.mongolab.com/api/1/databases/twitter_db/collections/profile/?";
     private final String APIKEY_SEARCH_PROFILE = "5xOXnbzry10fFTmd28DOX4y_TzKwYT4n";
 
 
@@ -50,14 +53,22 @@ public class SearchProfileActivity extends AppCompatActivity {
         String location_string = extras.getString("EXTRA_LOCATION");
         String radius_string = extras.getString("EXTRA_RADIUS");
         String interest_string = extras.getString("EXTRA_INTEREST");
-//        String activity = extras.getString("EXTRA_ACTIVITY");
+        String resultNumber_string = extras.getString("EXTRA_RESULT_NUMBER");
+        double currentLat = extras.getDouble("EXTRA_CURRENT_LAT");
+        double currentLng = extras.getDouble("EXTRA_CURRENT_LNG");
+
+        String interest_query = Uri.encode(interest_string);
+//        String location_query = (location_string.equals("")) ? ("&latlng=" + current_lat + "," + current_lng) : ("&location=" + Uri.encode(location_string));
+        String radius_query = (radius_string.equals("")) ? "10" : Uri.encode(radius_string);
+        String resultNumber_query = (resultNumber_string.equals("")) ? "50" : Uri.encode(resultNumber_string);
+
 
         String location_query = Uri.encode(location_string);
-        String radius_query = Uri.encode(radius_string);
-        String interest_query = Uri.encode(interest_string);
+//        String radius_query = Uri.encode(radius_string);
 
-        searchUrl = BASEURL_SEARCH_PROFILE + "q={$text:{$search:%22" + interest_query + "%22}}&l=100&apiKey=" + APIKEY_SEARCH_PROFILE;
 
+        searchUrl = BASEURL_SEARCH_PROFILE + "q={$text:{$search:%22" + interest_query + "%22}}&l=" + resultNumber_query + "&apiKey=" + APIKEY_SEARCH_PROFILE;
+        heatmapUrl = BASEURL_SEARCH_PROFILE + "q={$text:{$search:%22" + interest_query + "%22}}&apiKey=" + APIKEY_SEARCH_PROFILE;
 
 //        if(activity.equals("Search Tweets")) {
 //            searchUrl = BASEURL_SEARCH_TWEETS  + "q={$text:{$search:%22" + interest_query + "%22}}&l=100&apiKey=" + APIKEY_SEARCH_TWEETS;
@@ -95,12 +106,23 @@ public class SearchProfileActivity extends AppCompatActivity {
 
         if (id == R.id.heat_map ) {
             Intent intent = new Intent(this, HeatMapActivity.class);
-            intent.putExtra("URL", searchUrl);
+
+            Bundle extras = new Bundle();
+            extras.putString("URL", heatmapUrl);
+            extras.putString("CALLING_ACTIVITY","searchProfile");
+            intent.putExtras(extras);
+
             startActivity(intent);
+
             return true;
         }else if (id == R.id.google_map ) {
             Intent intent = new Intent(SearchProfileActivity.this, MapActivity.class);
-            intent.putExtra("URL", searchUrl);
+
+            Bundle extras = new Bundle();
+            extras.putString("URL", searchUrl);
+            extras.putString("CALLING_ACTIVITY","searchProfile");
+            intent.putExtras(extras);
+
             startActivity(intent);
             return true;
         }else if(id == R.id.tag_cloud ) {
@@ -123,7 +145,7 @@ public class SearchProfileActivity extends AppCompatActivity {
     }
 
     protected void updateDisplay() {
-        ProfileAdapter adapter = new ProfileAdapter(this, R.layout.user_profile, tweetsList);
+        ProfileAdapter adapter = new ProfileAdapter(this, R.layout.user_profile, profileList);
         lv.setAdapter(adapter);
     }
 
@@ -134,7 +156,7 @@ public class SearchProfileActivity extends AppCompatActivity {
         return networkInfo != null && networkInfo.isConnectedOrConnecting();
     }
 
-    private class MyTask extends AsyncTask<String, String, List<Tweet>> {
+    private class MyTask extends AsyncTask<String, String, List<UserProfile>> {
 
         @Override
         protected void onPreExecute() {
@@ -146,18 +168,18 @@ public class SearchProfileActivity extends AppCompatActivity {
         }
 
         @Override
-        protected List<Tweet> doInBackground(String... params) {
+        protected List<UserProfile> doInBackground(String... params) {
 
             String content = HttpManager.getData(params[0]);
-            tweetsList = TweetJSONParser.parseFeed(content);
+            profileList = ProfileJSONParser.parseFeed(content);
 
-            for (Tweet tweet:tweetsList){
+            for (UserProfile profile:profileList){
                 try {
-                    String imageUrl = tweet.getProfile_image_url();
+                    String imageUrl = profile.getProfile_image_url();
                     if(imageUrl != null){
                         InputStream in = (InputStream) new URL(imageUrl).getContent();
                         Bitmap bitmap = BitmapFactory.decodeStream(in);
-                        tweet.setProfile_pic(bitmap);
+                        profile.setProfile_pic(bitmap);
                         in.close();
                     }
 
@@ -166,13 +188,13 @@ public class SearchProfileActivity extends AppCompatActivity {
                 }
 
             }
-            return tweetsList;
+            return profileList;
 
 
         }
 
         @Override
-        protected void onPostExecute(List<Tweet> result) {
+        protected void onPostExecute(List<UserProfile> result) {
 
             tasks.remove(this);
             if(tasks.size() == 0) {

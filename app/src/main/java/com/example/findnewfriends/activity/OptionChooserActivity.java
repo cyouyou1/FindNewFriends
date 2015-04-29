@@ -9,8 +9,11 @@ import com.google.android.gms.location.LocationServices;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.location.Address;
+import android.location.Geocoder;
 import android.location.Location;
 
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -19,6 +22,16 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.findnewfriends.R;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.util.List;
+import java.util.Locale;
 
 //TODO: clean up the location update part as well as put extra part
 
@@ -39,6 +52,8 @@ public class OptionChooserActivity extends Activity implements
     private GoogleApiClient googleApiClient;
     private double currentLat;
     private double currentLng;
+    private double lat;
+    private double lng;
     private final static int CONNECTION_FAILURE_RESOLUTION_REQUEST = 9000;
     private LocationRequest locationRequest;
     private Location currentLocation;
@@ -60,7 +75,7 @@ public class OptionChooserActivity extends Activity implements
 
         locationRequest = new LocationRequest()
                 .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
-                .setInterval(10 * 1000)        // 10 seconds, in milliseconds
+                .setInterval(60 * 1000)        // 60 seconds, in milliseconds
                 .setFastestInterval(1 * 1000); // 1 second, in milliseconds
 
 
@@ -92,6 +107,9 @@ public class OptionChooserActivity extends Activity implements
     }
 
 
+
+
+
     @Override
     protected void onStart() {
         super.onStart();
@@ -112,6 +130,77 @@ public class OptionChooserActivity extends Activity implements
         setUpSignOut();
     }
 
+    public void getLatLongFromPlace(String place) {
+        try {
+            Geocoder selected_place_geocoder = new Geocoder(this);
+            List<Address> address = selected_place_geocoder.getFromLocationName(place, 5);
+            Address location = address.get(0);
+            lat= location.getLatitude();
+            lng = location.getLongitude();
+        } catch (Exception e) {
+            fetchLatLongFromService fetch_latlng_from_service =
+                    new fetchLatLongFromService(place);
+            fetch_latlng_from_service.execute();
+        }
+
+    }
+
+
+//Sometimes happens that device gives location = null
+
+    private class fetchLatLongFromService extends AsyncTask<Void, Void, StringBuilder> {
+
+        String place;
+
+        public fetchLatLongFromService(String place) {
+            super();
+            this.place = place;
+        }
+
+        @Override
+        protected StringBuilder doInBackground(Void... params) {
+
+            try {
+                HttpURLConnection conn = null;
+                StringBuilder jsonResults = new StringBuilder();
+                String googleMapUrl = "http://maps.googleapis.com/maps/api/geocode/json?address="
+                        + this.place + "&sensor=false";
+
+                URL url = new URL(googleMapUrl);
+                conn = (HttpURLConnection) url.openConnection();
+                InputStreamReader in = new InputStreamReader( conn.getInputStream());
+                int read;
+                char[] buff = new char[1024];
+                while ((read = in.read(buff)) != -1) {
+                    jsonResults.append(buff, 0, read);
+                }
+                return jsonResults;
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return null;
+
+        }
+
+        @Override
+        protected void onPostExecute(StringBuilder result) {
+            try {
+                JSONObject jsonObject = new JSONObject(result.toString());
+
+                lng = ((JSONArray)jsonObject.get("results")).getJSONObject(0)
+                        .getJSONObject("geometry").getJSONObject("location")
+                        .getDouble("lng");
+
+                lat = ((JSONArray)jsonObject.get("results")).getJSONObject(0)
+                        .getJSONObject("geometry").getJSONObject("location")
+                        .getDouble("lat");
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
     private void setUpSearchTweets() {
 
         searchTweetsButton.setOnClickListener(new View.OnClickListener() {
@@ -119,6 +208,10 @@ public class OptionChooserActivity extends Activity implements
             public void onClick(View v) {
 
                 String location = String.valueOf(locationET.getText());
+                if(!location.equals("")) {
+                    getLatLongFromPlace(location);
+                }
+                Toast.makeText(OptionChooserActivity.this, "lat:" + lat + "lng:" + lng, Toast.LENGTH_LONG ).show();
                 String radius = String.valueOf(radiusET.getText());
                 String interest = String.valueOf(interestET.getText());
                 String resultNumber = String.valueOf(resultNumberET.getText());
@@ -133,6 +226,8 @@ public class OptionChooserActivity extends Activity implements
                 extras.putString("EXTRA_RESULT_NUMBER", resultNumber);
                 extras.putDouble("EXTRA_CURRENT_LAT", currentLat);
                 extras.putDouble("EXTRA_CURRENT_LNG", currentLng);
+                extras.putDouble("EXTRA_LAT", lat);
+                extras.putDouble("EXTRA_LNG", lng);
                 intent.putExtras(extras);
 
                 startActivity(intent);
@@ -238,5 +333,8 @@ public class OptionChooserActivity extends Activity implements
         currentLocation = location;
     }
 
+
+
 }
+
 

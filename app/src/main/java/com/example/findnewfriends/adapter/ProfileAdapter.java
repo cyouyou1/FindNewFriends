@@ -11,18 +11,19 @@ import android.widget.TextView;
 
 import com.example.findnewfriends.R;
 import com.example.findnewfriends.model.Tweet;
+import com.example.findnewfriends.model.UserProfile;
 
 import java.util.List;
 
-public class ProfileAdapter extends ArrayAdapter<Tweet> {
+public class ProfileAdapter extends ArrayAdapter<UserProfile> {
 
     private Context context;
-    private List<Tweet> tweetsList;
+    private List<UserProfile> profileList;
 
-    public ProfileAdapter(Context context, int resource, List<Tweet> objects) {
+    public ProfileAdapter(Context context, int resource, List<UserProfile> objects) {
         super(context, resource, objects);
         this.context = context;
-        this.tweetsList = objects;
+        this.profileList = objects;
     }
 
     @Override
@@ -32,13 +33,13 @@ public class ProfileAdapter extends ArrayAdapter<Tweet> {
         View view = inflater.inflate(R.layout.user_profile, parent, false);
 
 
-        Tweet tweet = tweetsList.get(position);
+        UserProfile profile = profileList.get(position);
         TextView tv1 = (TextView) view.findViewById(R.id.textView1);
-        tv1.setText(tweet.getUser_description());
+        tv1.setText(profile.getUser_description());
         TextView tv2 = (TextView) view.findViewById(R.id.textView2);
-        tv2.setText(tweet.getUser_screen_name());
+        tv2.setText(profile.getUser_screen_name());
         ImageView image = (ImageView) view.findViewById(R.id.imageView1);
-        image.setImageBitmap(tweet.getProfile_pic());
+        image.setImageBitmap(profile.getProfile_pic());
 
 
         return view;

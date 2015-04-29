@@ -10,6 +10,8 @@ import android.support.v4.app.FragmentActivity;
 import com.example.findnewfriends.model.HttpManager;
 import com.example.findnewfriends.R;
 import com.example.findnewfriends.model.Tweet;
+import com.example.findnewfriends.model.UserProfile;
+import com.example.findnewfriends.parser.ProfileJSONParser;
 import com.example.findnewfriends.parser.TweetJSONParser;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
@@ -27,6 +29,7 @@ public class HeatMapActivity extends FragmentActivity {
     private GoogleMap mMap; // Might be null if Google Play services APK is not available.
     private static final int ALT_HEATMAP_RADIUS = 50;
     private String searchUrl;
+    private String callingActivity;
     /**
      * Alternative opacity of heatmap overlay
      */
@@ -72,8 +75,14 @@ public class HeatMapActivity extends FragmentActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        Intent SearchIntent = getIntent();
-        searchUrl = SearchIntent.getStringExtra("URL");
+        Intent searchIntent = getIntent();
+        Bundle extras = searchIntent.getExtras();
+        String location_string = extras.getString("EXTRA_LOCATION");
+
+
+        searchUrl = extras.getString("URL");
+        callingActivity = extras.getString("CALLING_ACTIVITY");
+
 
 
         setContentView(R.layout.activity_heatmap);
@@ -133,18 +142,35 @@ public class HeatMapActivity extends FragmentActivity {
         protected List<LatLng> doInBackground(String... params) {
 
             String content = HttpManager.getData(params[0]);
-            List<Tweet> tweetsList = TweetJSONParser.parseFeed(content);
             List<LatLng> latLngList = new ArrayList<>();
+            if(callingActivity.equals("searchTweets")) {
+                 List<Tweet> tweetsList = TweetJSONParser.parseFeed(content);
+                 for (Tweet tweet:tweetsList){
 
-            for (Tweet tweet:tweetsList){
-
-                try {
-                    LatLng markerLatLng = tweet.getLatLng();
-                    if(markerLatLng != null){
-                        latLngList.add(markerLatLng);
+                    try {
+                        LatLng markerLatLng = tweet.getLatLng();
+                        if(markerLatLng != null){
+                            latLngList.add(markerLatLng);
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
                     }
-                } catch (Exception e) {
-                    e.printStackTrace();
+
+                }
+            }else if (callingActivity.equals("searchProfile")) {
+                List<UserProfile> profileList = ProfileJSONParser.parseFeed(content);
+
+                for (UserProfile profile:profileList){
+
+                    try {
+                        LatLng markerLatLng = profile.getLatLng();
+                        if(markerLatLng != null){
+                            latLngList.add(markerLatLng);
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+
                 }
 
             }

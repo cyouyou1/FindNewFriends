@@ -12,6 +12,8 @@ import com.example.findnewfriends.model.StopWords;
 import com.example.findnewfriends.model.Tag;
 import com.example.findnewfriends.model.TagFrequency;
 import com.example.findnewfriends.model.Tweet;
+import com.example.findnewfriends.model.UserProfile;
+import com.example.findnewfriends.parser.ProfileJSONParser;
 import com.example.findnewfriends.parser.TweetJSONParser;
 import com.example.findnewfriends.view.TagCloudView;
 
@@ -48,12 +50,12 @@ public class TagCloudActivity extends Activity {
         protected List<Tag> doInBackground(String... params) {
 
             String content = HttpManager.getData(params[0]);
-            List<Tweet> tweetsList = TweetJSONParser.parseFeed(content);
+            List<UserProfile> profileList = ProfileJSONParser.parseFeed(content);
             Map<String, Integer> words_count_map = new HashMap<>();
             StopWords stopWords = new StopWords();
 
-            for (Tweet tweet : tweetsList) {
-                String[] words = tweet.getUser_description().toLowerCase().split("\\s+");
+            for (UserProfile profile : profileList) {
+                String[] words = profile.getUser_description().toLowerCase().split("\\s+");
                 for (int i = 0; i < words.length; i++) {
                     String s = words[i].replaceAll("[^a-z]", "");
                     if(s!= null && !stopWords.isStopWord(s)) {
