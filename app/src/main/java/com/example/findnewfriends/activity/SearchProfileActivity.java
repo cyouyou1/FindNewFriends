@@ -44,6 +44,7 @@ public class SearchProfileActivity extends AppCompatActivity {
     private double longitude;
     private double radius_meters;
     private int resultNumber;
+    private String interest_query;
 
     private static final int DEFAULT_RADIUS_IN_MILES = 10;
     private static final int DEFAULT_RESULTS_NUMBER = 20;
@@ -88,8 +89,8 @@ public class SearchProfileActivity extends AppCompatActivity {
             radius_meters = Double.parseDouble(radius_string) * 1609.34;
         }
 
-        String interest_query = Uri.encode(interest_string);
-        profileSearchUrl = BASEURL_SEARCH_PROFILE + "q={$text:{$search:%22" + interest_query + "%22}}&apiKey=" + APIKEY_SEARCH_PROFILE;
+        interest_query = Uri.encode(interest_string);
+        profileSearchUrl = BASEURL_SEARCH_PROFILE + "q={$text:{$search:\"\\\"" + interest_query + "\\\"\"}}&apiKey=" + APIKEY_SEARCH_PROFILE;
 
         lv = (ListView) findViewById(R.id.list_view);
         pb = (ProgressBar)findViewById(R.id.progressBar);

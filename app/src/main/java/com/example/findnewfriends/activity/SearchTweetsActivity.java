@@ -41,6 +41,7 @@ public class SearchTweetsActivity extends AppCompatActivity {
     private double longitude;
     private double radius_meters;
     private int resultNumber;
+    private String interest_query;
     private static final int DEFAULT_RADIUS_IN_MILES = 10;
     private static final int DEFAULT_RESULTS_NUMBER = 20;
 
@@ -85,8 +86,8 @@ public class SearchTweetsActivity extends AppCompatActivity {
             radius_meters = Double.parseDouble(radius_string) * 1609.34;
         }
 
-        String interest_query = Uri.encode(interest_string);
-        tweetSearchUrl = BASEURL_SEARCH_TWEETS + "q={$text:{$search:%22" + interest_query + "%22}}&apiKey=" + APIKEY_SEARCH_TWEETS;
+        interest_query = Uri.encode(interest_string);
+        tweetSearchUrl = BASEURL_SEARCH_TWEETS + "q={$text:{$search:\"\\\"" + interest_query + "\\\"\"}}&apiKey=" + APIKEY_SEARCH_TWEETS;
 
         lv = (ListView) findViewById(R.id.list_view);
         pb = (ProgressBar)findViewById(R.id.progressBar);

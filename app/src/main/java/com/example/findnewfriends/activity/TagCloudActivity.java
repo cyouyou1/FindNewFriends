@@ -21,7 +21,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-//TODO: tag cloud positio issue
+//TODO: tag cloud position issue, maybe integrate number of result?
 
 public class TagCloudActivity extends Activity {
 
