@@ -16,6 +16,7 @@ import com.example.findnewfriends.parser.TweetJSONParser;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.TileOverlay;
 import com.google.android.gms.maps.model.TileOverlayOptions;
 import com.google.maps.android.heatmaps.Gradient;
@@ -218,6 +219,8 @@ public class HeatMapActivity extends FragmentActivity {
                 mProvider.setData(latLngList);
                 mOverlay.clearTileCache();
             }
+//TODO: see if markers work on heatmap
+//            mMap.addMarker(new MarkerOptions().position(new LatLng(latitude, longitude)));
 
         }
 

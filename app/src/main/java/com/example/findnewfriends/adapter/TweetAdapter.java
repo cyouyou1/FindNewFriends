@@ -12,7 +12,11 @@ import android.widget.TextView;
 import com.example.findnewfriends.R;
 import com.example.findnewfriends.model.Tweet;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 public class TweetAdapter extends ArrayAdapter<Tweet> {
 
@@ -36,7 +40,15 @@ public class TweetAdapter extends ArrayAdapter<Tweet> {
         TextView tv1 = (TextView) view.findViewById(R.id.textView1);
         tv1.setText(tweet.getTweet_text());
         TextView tv2 = (TextView) view.findViewById(R.id.textView2);
-        tv2.setText(tweet.getCreated_at());
+        try {
+            final String TWITTER="EEE MMM dd HH:mm:ss ZZZZZ yyyy";
+            SimpleDateFormat sdf = new SimpleDateFormat(TWITTER, Locale.ENGLISH);
+            SimpleDateFormat df = new SimpleDateFormat("EEE MMM dd HH:mm yyyy");
+            tv2.setText(df.format(sdf.parse(tweet.getCreated_at())).toString());
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
         TextView tv3 = (TextView) view.findViewById(R.id.textView3);
         tv3.setText(tweet.getUser_screen_name());
         ImageView image = (ImageView) view.findViewById(R.id.imageView1);
@@ -46,4 +58,11 @@ public class TweetAdapter extends ArrayAdapter<Tweet> {
         return view;
     }
 
+    public static Date getTwitterDate(String date) throws ParseException
+    {
+        final String TWITTER="EEE MMM dd HH:mm:ss ZZZZZ yyyy";
+        SimpleDateFormat sdf = new SimpleDateFormat(TWITTER, Locale.ENGLISH);
+        sdf.setLenient(true);
+        return sdf.parse(date);
+    }
 }

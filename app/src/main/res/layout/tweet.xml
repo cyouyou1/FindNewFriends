@@ -39,8 +39,8 @@
                 android:text="@string/created_at"
                 android:layout_alignParentRight="true"
                 android:textColor="@color/white"
-                android:layout_marginTop="2dp"
-                android:textSize="8sp"/>
+                android:layout_marginTop="4dp"
+                android:textSize="9sp"/>
 
         </RelativeLayout>
 
