@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.location.Location;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
@@ -31,14 +32,22 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class SearchProfileActivity extends AppCompatActivity {
-    //TODO: load pic when scrolling, get location and radius working, modify database
-    //TODO change sign out icon to go back icon
+    //TODO: modify database
+
     private ListView lv;
     private ProgressBar pb;
     private List<MyTask> tasks;
-    private List<UserProfile> profileList;
-    private String searchUrl;
-    private String heatmapUrl;
+    private List<UserProfile> oldProfileList;
+    private List<UserProfile> newProfileList;
+    private String profileSearchUrl;
+    private double latitude;
+    private double longitude;
+    private double radius_meters;
+    private int resultNumber;
+
+    private static final int DEFAULT_RADIUS_IN_MILES = 10;
+    private static final int DEFAULT_RESULTS_NUMBER = 20;
+
     private final String BASEURL_SEARCH_PROFILE = "https://api.mongolab.com/api/1/databases/twitter_db/collections/profile/?";
     private final String APIKEY_SEARCH_PROFILE = "5xOXnbzry10fFTmd28DOX4y_TzKwYT4n";
 
@@ -56,26 +65,31 @@ public class SearchProfileActivity extends AppCompatActivity {
         String resultNumber_string = extras.getString("EXTRA_RESULT_NUMBER");
         double currentLat = extras.getDouble("EXTRA_CURRENT_LAT");
         double currentLng = extras.getDouble("EXTRA_CURRENT_LNG");
+        double lat = extras.getDouble("EXTRA_LAT");
+        double lng = extras.getDouble("EXTRA_LNG");
+
+
+        if(resultNumber_string.equals("")){
+            resultNumber = DEFAULT_RESULTS_NUMBER;
+        }else {
+            resultNumber = Integer.parseInt(resultNumber_string);
+        }
+        if(location_string.equals("")){
+            latitude = currentLat;
+            longitude = currentLng;
+        }else {
+            latitude = lat;
+            longitude = lng;
+        }
+
+        if(radius_string.equals("")){
+            radius_meters = DEFAULT_RADIUS_IN_MILES * 1609.34;
+        }else {
+            radius_meters = Double.parseDouble(radius_string) * 1609.34;
+        }
 
         String interest_query = Uri.encode(interest_string);
-//        String location_query = (location_string.equals("")) ? ("&latlng=" + current_lat + "," + current_lng) : ("&location=" + Uri.encode(location_string));
-        String radius_query = (radius_string.equals("")) ? "10" : Uri.encode(radius_string);
-        String resultNumber_query = (resultNumber_string.equals("")) ? "50" : Uri.encode(resultNumber_string);
-
-
-        String location_query = Uri.encode(location_string);
-//        String radius_query = Uri.encode(radius_string);
-
-
-        searchUrl = BASEURL_SEARCH_PROFILE + "q={$text:{$search:%22" + interest_query + "%22}}&l=" + resultNumber_query + "&apiKey=" + APIKEY_SEARCH_PROFILE;
-        heatmapUrl = BASEURL_SEARCH_PROFILE + "q={$text:{$search:%22" + interest_query + "%22}}&apiKey=" + APIKEY_SEARCH_PROFILE;
-
-//        if(activity.equals("Search Tweets")) {
-//            searchUrl = BASEURL_SEARCH_TWEETS  + "q={$text:{$search:%22" + interest_query + "%22}}&l=100&apiKey=" + APIKEY_SEARCH_TWEETS;
-//        }else if(activity.equals("Search Profile")){
-//            searchUrl = BASEURL_SEARCH_PROFILE + "q={$text:{$search:%22" + interest_query + "%22}}&l=100&apiKey=" + APIKEY_SEARCH_PROFILE;
-//        }
-
+        profileSearchUrl = BASEURL_SEARCH_PROFILE + "q={$text:{$search:%22" + interest_query + "%22}}&apiKey=" + APIKEY_SEARCH_PROFILE;
 
         lv = (ListView) findViewById(R.id.list_view);
         pb = (ProgressBar)findViewById(R.id.progressBar);
@@ -83,7 +97,7 @@ public class SearchProfileActivity extends AppCompatActivity {
 
         tasks = new ArrayList<>();
         if (isOnline()) {
-            requestData(searchUrl);
+            requestData(profileSearchUrl);
         }
 
     }
@@ -105,29 +119,28 @@ public class SearchProfileActivity extends AppCompatActivity {
 
 
         if (id == R.id.heat_map ) {
-            Intent intent = new Intent(this, HeatMapActivity.class);
-
+            Intent intent = new Intent(SearchProfileActivity.this, HeatMapActivity.class);
             Bundle extras = new Bundle();
-            extras.putString("URL", heatmapUrl);
+            extras.putString("EXTRA_SEARCH_URL", profileSearchUrl);
             extras.putString("CALLING_ACTIVITY","searchProfile");
             intent.putExtras(extras);
-
             startActivity(intent);
-
             return true;
         }else if (id == R.id.google_map ) {
             Intent intent = new Intent(SearchProfileActivity.this, MapActivity.class);
-
             Bundle extras = new Bundle();
-            extras.putString("URL", searchUrl);
+            extras.putDouble("EXTRA_LATITUDE", latitude);
+            extras.putDouble("EXTRA_LONGITUDE", longitude);
+            extras.putString("EXTRA_SEARCH_URL", profileSearchUrl);
             extras.putString("CALLING_ACTIVITY","searchProfile");
+            extras.putDouble("RADIUS_IN_METER",radius_meters);
+            extras.putInt("RESULT_NUMBER",resultNumber);
             intent.putExtras(extras);
-
             startActivity(intent);
             return true;
         }else if(id == R.id.tag_cloud ) {
             Intent intent = new Intent(SearchProfileActivity.this, TagCloudActivity.class);
-            intent.putExtra("URL", searchUrl);
+            intent.putExtra("URL", profileSearchUrl);
             startActivity(intent);
             return true;
         }else if (id == R.id.goback ) {
@@ -145,7 +158,7 @@ public class SearchProfileActivity extends AppCompatActivity {
     }
 
     protected void updateDisplay() {
-        ProfileAdapter adapter = new ProfileAdapter(this, R.layout.user_profile, profileList);
+        ProfileAdapter adapter = new ProfileAdapter(this, R.layout.user_profile, newProfileList);
         lv.setAdapter(adapter);
     }
 
@@ -171,26 +184,33 @@ public class SearchProfileActivity extends AppCompatActivity {
         protected List<UserProfile> doInBackground(String... params) {
 
             String content = HttpManager.getData(params[0]);
-            profileList = ProfileJSONParser.parseFeed(content);
+            oldProfileList = ProfileJSONParser.parseFeed(content);
+            int count = 0;
+            newProfileList = new ArrayList<>();
 
-            for (UserProfile profile:profileList){
-                try {
-                    String imageUrl = profile.getProfile_image_url();
-                    if(imageUrl != null){
-                        InputStream in = (InputStream) new URL(imageUrl).getContent();
-                        Bitmap bitmap = BitmapFactory.decodeStream(in);
-                        profile.setProfile_pic(bitmap);
-                        in.close();
+            for (UserProfile profile:oldProfileList) {
+                double profile_lat = profile.getLatLng().latitude;
+                double profile_lng = profile.getLatLng().longitude;
+                float[]distance = new float[3];
+                Location.distanceBetween(profile_lat, profile_lng, latitude, longitude, distance);
+                if ((double)distance[0] <= radius_meters && count < resultNumber) {
+                    count ++;
+                    try {
+                        String imageUrl = profile.getProfile_image_url();
+                        if (imageUrl != null) {
+                            InputStream in = (InputStream) new URL(imageUrl).getContent();
+                            Bitmap bitmap = BitmapFactory.decodeStream(in);
+                            profile.setProfile_pic(bitmap);
+                            in.close();
+                        }
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
                     }
-
-                } catch (Exception e){
-                    e.printStackTrace();
+                    newProfileList.add(profile);
                 }
-
             }
-            return profileList;
-
-
+            return newProfileList;
         }
 
         @Override
@@ -206,11 +226,7 @@ public class SearchProfileActivity extends AppCompatActivity {
             }
 
             updateDisplay();
-
         }
-
-
-
     }
 }
 

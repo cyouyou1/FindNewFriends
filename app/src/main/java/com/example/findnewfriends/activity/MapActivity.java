@@ -2,9 +2,11 @@ package com.example.findnewfriends.activity;
 
 
 import android.content.Intent;
+import android.location.Location;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.widget.TextView;
 
 import com.example.findnewfriends.model.HttpManager;
 import com.example.findnewfriends.R;
@@ -14,6 +16,7 @@ import com.example.findnewfriends.parser.ProfileJSONParser;
 import com.example.findnewfriends.parser.TweetJSONParser;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
@@ -25,25 +28,23 @@ public class MapActivity extends FragmentActivity {
     private GoogleMap mMap;
     private String searchUrl;
     private String callingActivity;
+    private double latitude;
+    private double longitude;
+    private int resultNumber;
+    private double radius_in_meter;
 
-//    private static final String USER_FOOTBALL_URL =
-//            "https://api.mongolab.com/api/1/databases/twitter_db/collections/geo_tweets/?l=50&apiKey=5xOXnbzry10fFTmd28DOX4y_TzKwYT4n";
-//
-//
-//    private static final String MONGOLAB_HIKING_URL =
-//            "https://api.mongolab.com/api/1/databases/project_db/collections/simple_tweets/?q={$text:{$search:%22reading%20book%22}}&l=10&apiKey=zmTpDSixS5MN2Kb6txgHDM9GvxE5sksX";
-    @Override
+     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         Intent searchIntent = getIntent();
         Bundle extras = searchIntent.getExtras();
-        String location_string = extras.getString("EXTRA_LOCATION");
-
-
-        searchUrl = extras.getString("URL");
+        latitude = extras.getDouble("EXTRA_LATITUDE");
+        longitude = extras.getDouble("EXTRA_LONGITUDE");
+        searchUrl = extras.getString("EXTRA_SEARCH_URL");
         callingActivity = extras.getString("CALLING_ACTIVITY");
-
+        resultNumber = extras.getInt("RESULT_NUMBER");
+        radius_in_meter = extras.getDouble("RADIUS_IN_METER");
 
         setContentView(R.layout.activity_maps);
         setUpMapIfNeeded();
@@ -55,21 +56,7 @@ public class MapActivity extends FragmentActivity {
         setUpMapIfNeeded();
     }
 
-    /**
-     * Sets up the map if it is possible to do so (i.e., the Google Play services APK is correctly
-     * installed) and the map has not already been instantiated.. This will ensure that we only ever
-     * call {@link #setUpMap()} once when {@link #mMap} is not null.
-     * <p/>
-     * If it isn't installed {@link SupportMapFragment} (and
-     * {@link com.google.android.gms.maps.MapView MapView}) will show a prompt for the user to
-     * install/update the Google Play services APK on their device.
-     * <p/>
-     * A user can return to this FragmentActivity after following the prompt and correctly
-     * installing/updating/enabling the Google Play services. Since the FragmentActivity may not
-     * have been completely destroyed during this process (it is likely that it would only be
-     * stopped or paused), {@link #onCreate(android.os.Bundle)} may not be called again so we should call this
-     * method in {@link #onResume()} to guarantee that it will be called.
-     */
+
     private void setUpMapIfNeeded() {
         // Do a null check to confirm that we have not already instantiated the map.
         if (mMap == null) {
@@ -83,12 +70,7 @@ public class MapActivity extends FragmentActivity {
         }
     }
 
-    /**
-     * This is where we can add markers or lines, add listeners or move the camera. In this case, we
-     * just add a marker near Africa.
-     * <p/>
-     * This should only be called once and when we are sure that {@link #mMap} is not null.
-     */
+
     private void setUpMap() {
 
         AddMarkerTask task = new AddMarkerTask();
@@ -102,55 +84,44 @@ public class MapActivity extends FragmentActivity {
         protected List<LatLng> doInBackground(String... params) {
 
             String content = HttpManager.getData(params[0]);
+            int count = 0;
 
             List<LatLng> latLngList = new ArrayList<>();
             if(callingActivity.equals("searchTweets")) {
                 List<Tweet> tweetsList = TweetJSONParser.parseFeed(content);
                 for (Tweet tweet:tweetsList){
-
-                    try {
-                        LatLng markerLatLng = tweet.getLatLng();
-                        if(markerLatLng != null){
-                            latLngList.add(markerLatLng);
-                        }
-                    } catch (Exception e) {
-                        e.printStackTrace();
+                    double tweet_lat = tweet.getLatLng().latitude;
+                    double tweet_lng = tweet.getLatLng().longitude;
+                    float[]distance = new float[3];
+                    Location.distanceBetween(tweet_lat, tweet_lng, latitude, longitude, distance);
+                    if ((double)distance[0] <= radius_in_meter && count < resultNumber) {
+                        count++;
+                        latLngList.add(new LatLng(tweet_lat, tweet_lng));
                     }
-
                 }
             }else if (callingActivity.equals("searchProfile")) {
                 List<UserProfile> profileList = ProfileJSONParser.parseFeed(content);
-
                 for (UserProfile profile:profileList){
-
-                    try {
-                        LatLng markerLatLng = profile.getLatLng();
-                        if(markerLatLng != null){
-                            latLngList.add(markerLatLng);
-                        }
-                    } catch (Exception e) {
-                        e.printStackTrace();
+                    double profile_lat = profile.getLatLng().latitude;
+                    double profile_lng = profile.getLatLng().longitude;
+                    float[]distance = new float[3];
+                    Location.distanceBetween(profile_lat, profile_lng, latitude, longitude, distance);
+                    if ((double)distance[0] <= radius_in_meter && count < resultNumber) {
+                        count++;
+                        latLngList.add(new LatLng(profile_lat, profile_lng));
                     }
-
                 }
-
             }
             return latLngList;
-
-
-
-
         }
 
         @Override
         protected void onPostExecute(List<LatLng> latLngList) {
 
             for (LatLng latLng: latLngList){
-                mMap.addMarker(new MarkerOptions().position(latLng).title("Tweet"));
+                mMap.addMarker(new MarkerOptions().position(latLng).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
             }
+            mMap.addMarker(new MarkerOptions().position(new LatLng(latitude, longitude)));
         }
-
-
-        }
-
     }
+}

@@ -30,7 +30,7 @@ import com.twitter.sdk.android.core.identity.TwitterLoginButton;
 import io.fabric.sdk.android.Fabric;
 
 
-
+//TODO:network suspended problem for nexus 6
 
 public class LoginActivity extends Activity {
 

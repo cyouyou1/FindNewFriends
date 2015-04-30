@@ -30,18 +30,20 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class SearchTweetsActivity extends AppCompatActivity {
-    public static final int DEFAULT_RADIUS = 10;
-    //TODO: load pic when scrolling
+//TODO: add sent tweet function
     private ListView lv;
     private ProgressBar pb;
     private List<MyTask> tasks;
     private List<Tweet> oldTweetsList;
     private List<Tweet> newTweetsList;
-    private String searchUrl;
+    private String tweetSearchUrl;
     private double latitude;
     private double longitude;
     private double radius_meters;
     private int resultNumber;
+    private static final int DEFAULT_RADIUS_IN_MILES = 10;
+    private static final int DEFAULT_RESULTS_NUMBER = 20;
+
 
 
     private final String BASEURL_SEARCH_TWEETS  = "https://api.mongolab.com/api/1/databases/twitter_db/collections/geo_tweets/?";
@@ -65,7 +67,7 @@ public class SearchTweetsActivity extends AppCompatActivity {
         double lng = extras.getDouble("EXTRA_LNG");
 
         if(resultNumber_string.equals("")){
-            resultNumber = 50;
+            resultNumber = DEFAULT_RESULTS_NUMBER;
         }else {
             resultNumber = Integer.parseInt(resultNumber_string);
         }
@@ -78,17 +80,13 @@ public class SearchTweetsActivity extends AppCompatActivity {
         }
 
         if(radius_string.equals("")){
-            radius_meters = DEFAULT_RADIUS * 1609.34;
+            radius_meters = DEFAULT_RADIUS_IN_MILES * 1609.34;
         }else {
             radius_meters = Double.parseDouble(radius_string) * 1609.34;
         }
 
         String interest_query = Uri.encode(interest_string);
-
-        searchUrl = BASEURL_SEARCH_TWEETS + "q={$text:{$search:%22" + interest_query + "%22}}&apiKey=" + APIKEY_SEARCH_TWEETS;
-
-
-
+        tweetSearchUrl = BASEURL_SEARCH_TWEETS + "q={$text:{$search:%22" + interest_query + "%22}}&apiKey=" + APIKEY_SEARCH_TWEETS;
 
         lv = (ListView) findViewById(R.id.list_view);
         pb = (ProgressBar)findViewById(R.id.progressBar);
@@ -96,7 +94,7 @@ public class SearchTweetsActivity extends AppCompatActivity {
 
         tasks = new ArrayList<>();
         if (isOnline()) {
-            requestData(searchUrl);
+            requestData(tweetSearchUrl);
         }
 
     }
@@ -118,13 +116,23 @@ public class SearchTweetsActivity extends AppCompatActivity {
 
 
         if (id == R.id.heat_map ) {
-            Intent intent = new Intent(this, HeatMapActivity.class);
-            intent.putExtra("URL", searchUrl);
+            Intent intent = new Intent(SearchTweetsActivity.this, HeatMapActivity.class);
+            Bundle extras = new Bundle();
+            extras.putString("EXTRA_SEARCH_URL", tweetSearchUrl);
+            extras.putString("CALLING_ACTIVITY","searchTweets");
+            intent.putExtras(extras);
             startActivity(intent);
             return true;
         }else if (id == R.id.google_map ) {
             Intent intent = new Intent(SearchTweetsActivity.this, MapActivity.class);
-            intent.putExtra("URL", searchUrl);
+            Bundle extras = new Bundle();
+            extras.putDouble("EXTRA_LATITUDE", latitude);
+            extras.putDouble("EXTRA_LONGITUDE", longitude);
+            extras.putString("EXTRA_SEARCH_URL", tweetSearchUrl);
+            extras.putString("CALLING_ACTIVITY","searchTweets");
+            extras.putDouble("RADIUS_IN_METER",radius_meters);
+            extras.putInt("RESULT_NUMBER",resultNumber);
+            intent.putExtras(extras);
             startActivity(intent);
             return true;
         }else if (id == R.id.goback ) {
@@ -174,9 +182,9 @@ public class SearchTweetsActivity extends AppCompatActivity {
 
             for (Tweet tweet:oldTweetsList) {
                 double tweet_lat = tweet.getLatLng().latitude;
-                double twee_lng = tweet.getLatLng().longitude;
+                double tweet_lng = tweet.getLatLng().longitude;
                 float[]distance = new float[3];
-                Location.distanceBetween(tweet_lat, twee_lng, latitude, longitude,distance);
+                Location.distanceBetween(tweet_lat, tweet_lng, latitude, longitude,distance);
                 if ((double)distance[0] <= radius_meters && count < resultNumber) {
                     count ++;
                     try {
@@ -212,7 +220,6 @@ public class SearchTweetsActivity extends AppCompatActivity {
             }
 
             updateDisplay();
-
         }
     }
 }

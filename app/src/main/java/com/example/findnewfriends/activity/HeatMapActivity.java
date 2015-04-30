@@ -1,6 +1,6 @@
 package com.example.findnewfriends.activity;
 
-
+//TODO: maybe add a marker for current location?
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.AsyncTask;
@@ -30,6 +30,8 @@ public class HeatMapActivity extends FragmentActivity {
     private static final int ALT_HEATMAP_RADIUS = 50;
     private String searchUrl;
     private String callingActivity;
+    private double latitude;
+    private double longitude;
     /**
      * Alternative opacity of heatmap overlay
      */
@@ -75,15 +77,10 @@ public class HeatMapActivity extends FragmentActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        Intent searchIntent = getIntent();
-        Bundle extras = searchIntent.getExtras();
-        String location_string = extras.getString("EXTRA_LOCATION");
-
-
-        searchUrl = extras.getString("URL");
+        Intent heatmapIntent = getIntent();
+        Bundle extras = heatmapIntent.getExtras();
+        searchUrl = extras.getString("EXTRA_SEARCH_URL");
         callingActivity = extras.getString("CALLING_ACTIVITY");
-
-
 
         setContentView(R.layout.activity_heatmap);
         setUpMapIfNeeded();

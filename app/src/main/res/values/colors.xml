@@ -17,9 +17,6 @@
     <color name="black">#000000</color>
     <color name="light_black">#2E2E2E</color>
     <color name="grey">#A4A4A4</color>
-    #A4A4A4
-
-
     <color name="full_transparent">#00000000</color>
     <color name="not_so_transparent">#44000000</color>
     <color name="even_less_transparent">#66000000</color>

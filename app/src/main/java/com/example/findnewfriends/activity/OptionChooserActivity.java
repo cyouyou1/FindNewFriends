@@ -257,7 +257,8 @@ public class OptionChooserActivity extends Activity implements
                 extras.putString("EXTRA_RESULT_NUMBER", resultNumber);
                 extras.putDouble("EXTRA_CURRENT_LAT", currentLat);
                 extras.putDouble("EXTRA_CURRENT_LNG", currentLng);
-
+                extras.putDouble("EXTRA_LAT", lat);
+                extras.putDouble("EXTRA_LNG", lng);
                 intent.putExtras(extras);
 
                 startActivity(intent);

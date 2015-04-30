@@ -87,7 +87,7 @@
             android:layout_marginTop="5dp"
             android:id="@+id/radius_input"
             android:textColor="@color/white"
-            android:hint="Default: 10"
+            android:hint="@string/default_radius_in_miles"
             android:textColorHint="@color/grey"
             android:textSize="15dp"/>
     </LinearLayout>
@@ -112,7 +112,7 @@
         android:layout_marginTop="5dp"
         android:id="@+id/result_number_input"
         android:textColor="@color/white"
-        android:hint="Default: 50"
+        android:hint="@string/default_result_number"
         android:textColorHint="@color/grey"
         android:textSize="15dp"/>
     </LinearLayout>

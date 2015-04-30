@@ -1,11 +1,8 @@
 <resources>
     <string name="app_name">Find Friends</string>
-
-
     <string name="action_settings">Settings</string>
     <string name="content_desc_icon">Application icon</string>
     <string name="sign_in_with_phone">Sign in with Phone</string>
-
     <string name="toast_twitter_signin_fail">It was not possible to Sign in with Twitter, try again later</string>
     <string name="toast_twitter_digits_fail">It was not possible to Sign up with your Phone, try again later</string>
     <string name="toast_twitter_signin_success">Login success: twitter account active</string>
@@ -28,13 +25,11 @@
     <string name="tweets_list_option">Tweets List</string>
     <string name="created_at">Creation Time</string>
     <string name="tweet_text">Tweet Text</string>
-
-
-
-
     <string name="user_screen_name_holder">\Screen Name</string>
     <string name="user_profile_holder">Profile Description</string>
     <string name="profile_picture">Profile Picture</string>
+    <string name="default_result_number">Default: 20</string>
+    <string name="default_radius_in_miles">Default: 10</string>
 
 
 </resources>

@@ -21,7 +21,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+//TODO: tag cloud positio issue
+
 public class TagCloudActivity extends Activity {
+
     private String searchUrl;
     private TagCloudView mTagCloudView;
 	private final String TAG = "cloudtag";
@@ -82,9 +85,7 @@ public class TagCloudActivity extends Activity {
             mTagCloudView.requestFocus();
             mTagCloudView.setFocusableInTouchMode(true);
             container.addView(mTagCloudView);
-
         }
-
     }
 
 
