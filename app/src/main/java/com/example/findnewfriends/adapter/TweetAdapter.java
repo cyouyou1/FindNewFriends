@@ -43,8 +43,8 @@ public class TweetAdapter extends ArrayAdapter<Tweet> {
         try {
             final String TWITTER="EEE MMM dd HH:mm:ss ZZZZZ yyyy";
             SimpleDateFormat sdf = new SimpleDateFormat(TWITTER, Locale.ENGLISH);
-            SimpleDateFormat df = new SimpleDateFormat("EEE MMM dd HH:mm yyyy");
-            tv2.setText(df.format(sdf.parse(tweet.getCreated_at())).toString());
+            SimpleDateFormat df = new SimpleDateFormat("EEE MMM dd   HH:mm   yyyy");
+            tv2.setText(df.format(sdf.parse(tweet.getCreated_at())));
         } catch (ParseException e) {
             e.printStackTrace();
         }
@@ -58,11 +58,5 @@ public class TweetAdapter extends ArrayAdapter<Tweet> {
         return view;
     }
 
-    public static Date getTwitterDate(String date) throws ParseException
-    {
-        final String TWITTER="EEE MMM dd HH:mm:ss ZZZZZ yyyy";
-        SimpleDateFormat sdf = new SimpleDateFormat(TWITTER, Locale.ENGLISH);
-        sdf.setLenient(true);
-        return sdf.parse(date);
-    }
+
 }
