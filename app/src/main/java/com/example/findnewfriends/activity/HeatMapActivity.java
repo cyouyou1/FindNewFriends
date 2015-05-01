@@ -1,6 +1,5 @@
 package com.example.findnewfriends.activity;
 
-//TODO: maybe add a marker for current location?
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.AsyncTask;
@@ -27,8 +26,8 @@ import java.util.List;
 
 public class HeatMapActivity extends FragmentActivity {
 
-    private GoogleMap mMap; // Might be null if Google Play services APK is not available.
-    private static final int ALT_HEATMAP_RADIUS = 50;
+    private GoogleMap mMap;
+    private static final int ALT_HEATMAP_RADIUS = 40;
     private String searchUrl;
     private String callingActivity;
     private double latitude;
@@ -36,7 +35,7 @@ public class HeatMapActivity extends FragmentActivity {
     /**
      * Alternative opacity of heatmap overlay
      */
-    private static final double ALT_HEATMAP_OPACITY = 1;
+    private static final double ALT_HEATMAP_OPACITY = 0.9;
 
     /**
      * Alternative heatmap gradient (blue -> red)
@@ -59,22 +58,8 @@ public class HeatMapActivity extends FragmentActivity {
 
     private HeatmapTileProvider mProvider;
     private TileOverlay mOverlay;
-//    private final String BASEURL_SEARCH_PROFILE = "https://api.mongolab.com/api/1/databases/twitter_db/collections/geo_tweets/?";
-//    private final String APIKEY_SEARCH_PROFILE = "5xOXnbzry10fFTmd28DOX4y_TzKwYT4n";
-//
-//    private final String BASEURL_SEARCH_TWEETS  = "https://api.mongolab.com/api/1/databases/project_db/collections/simple_tweets/?";
-//    private final String APIKEY_SEARCH_TWEETS = "zmTpDSixS5MN2Kb6txgHDM9GvxE5sksX";
 
-//    private static final String USER_FOOTBALL_URL =
-//            "https://api.mongolab.com/api/1/databases/twitter_db/collections/geo_tweets/?l=1000&apiKey=5xOXnbzry10fFTmd28DOX4y_TzKwYT4n";
-//
-//    private static final String MONGOLAB_HIKING_URL =
-//            "https://api.mongolab.com/api/1/databases/project_db/collections/simple_tweets/?q={$text:{$search:%22hiking%22}}&l=100&apiKey=zmTpDSixS5MN2Kb6txgHDM9GvxE5sksX";
-//
-//
-//    private static final String MONGOLAB_READING_URL =
-//            "https://api.mongolab.com/api/1/databases/project_db/collections/simple_tweets/?q={$text:{$search:%22reading%20book%22}}&l=100&apiKey=zmTpDSixS5MN2Kb6txgHDM9GvxE5sksX";
-//    @Override
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
@@ -82,6 +67,8 @@ public class HeatMapActivity extends FragmentActivity {
         Bundle extras = heatmapIntent.getExtras();
         searchUrl = extras.getString("EXTRA_SEARCH_URL");
         callingActivity = extras.getString("CALLING_ACTIVITY");
+        latitude = extras.getDouble("EXTRA_LATITUDE");
+        longitude = extras.getDouble("EXTRA_LONGITUDE");
 
         setContentView(R.layout.activity_heatmap);
         setUpMapIfNeeded();
@@ -93,21 +80,7 @@ public class HeatMapActivity extends FragmentActivity {
         setUpMapIfNeeded();
     }
 
-    /**
-     * Sets up the map if it is possible to do so (i.e., the Google Play services APK is correctly
-     * installed) and the map has not already been instantiated.. This will ensure that we only ever
-     * call {@link #setUpMap()} once when {@link #mMap} is not null.
-     * <p/>
-     * If it isn't installed {@link com.google.android.gms.maps.SupportMapFragment} (and
-     * {@link com.google.android.gms.maps.MapView MapView}) will show a prompt for the user to
-     * install/update the Google Play services APK on their device.
-     * <p/>
-     * A user can return to this FragmentActivity after following the prompt and correctly
-     * installing/updating/enabling the Google Play services. Since the FragmentActivity may not
-     * have been completely destroyed during this process (it is likely that it would only be
-     * stopped or paused), {@link #onCreate(android.os.Bundle)} may not be called again so we should call this
-     * method in {@link #onResume()} to guarantee that it will be called.
-     */
+
     private void setUpMapIfNeeded() {
         // Do a null check to confirm that we have not already instantiated the map.
         if (mMap == null) {
@@ -121,12 +94,6 @@ public class HeatMapActivity extends FragmentActivity {
         }
     }
 
-    /**
-     * This is where we can add markers or lines, add listeners or move the camera. In this case, we
-     * just add a marker near Africa.
-     * <p/>
-     * This should only be called once and when we are sure that {@link #mMap} is not null.
-     */
     private void setUpMap() {
 
         HeatMapTask task = new HeatMapTask ();
@@ -180,31 +147,6 @@ public class HeatMapActivity extends FragmentActivity {
         @Override
         protected void onPostExecute(List<LatLng> latLngList) {
 
-//            int[] colors = {
-//                    Color.rgb(0, 0, 255), // blue
-//                    Color.rgb(255, 0, 0)    // red
-//            };
-//
-//            float[] startPoints = {
-//                    0.2f, 1f
-//            };
-//
-//            Gradient gradient = new Gradient(colors, startPoints);
-//
-//// Create the tile provider.
-//            if (mProvider == null) {
-//                mProvider = new HeatmapTileProvider.Builder()
-//                        .data(latLngList)
-//                        .opacity(0.9)
-//                        .radius(50)
-//                        .gradient(gradient)
-//                        .build();
-//                mOverlay = mMap.addTileOverlay(new TileOverlayOptions().tileProvider(mProvider));
-//            }else{
-//                mProvider.setData(latLngList);
-//                mOverlay.clearTileCache();
-//            }
-////
 
             if (mProvider == null) {
                 mProvider = new HeatmapTileProvider.Builder()
@@ -219,12 +161,7 @@ public class HeatMapActivity extends FragmentActivity {
                 mProvider.setData(latLngList);
                 mOverlay.clearTileCache();
             }
-//TODO: see if markers work on heatmap
-//            mMap.addMarker(new MarkerOptions().position(new LatLng(latitude, longitude)));
-
+            mMap.addMarker(new MarkerOptions().position(new LatLng(latitude, longitude)));
         }
-
-
     }
-
 }

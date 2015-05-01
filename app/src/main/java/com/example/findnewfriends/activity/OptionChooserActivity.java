@@ -1,6 +1,7 @@
 package com.example.findnewfriends.activity;
 
 
+import com.digits.sdk.android.Digits;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationListener;
@@ -15,6 +16,7 @@ import android.location.Location;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -22,6 +24,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.findnewfriends.R;
+import com.twitter.sdk.android.Twitter;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -31,14 +34,11 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.List;
-import java.util.Locale;
-
-//TODO: clean up the location update part as well as put extra part
-
 
 public class OptionChooserActivity extends Activity implements
         GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener,LocationListener {
 
+    private static final String TAG = "OptionChooserActivity";
     private Button searchTimelineButton;
     private Button searchTweetsButton;
     private Button searchProfileButton;
@@ -54,7 +54,6 @@ public class OptionChooserActivity extends Activity implements
     private double currentLng;
     private double lat;
     private double lng;
-    private final static int CONNECTION_FAILURE_RESOLUTION_REQUEST = 9000;
     private LocationRequest locationRequest;
     private Location currentLocation;
 
@@ -65,21 +64,16 @@ public class OptionChooserActivity extends Activity implements
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_option_chooser);
 
-
         googleApiClient = new GoogleApiClient.Builder(this)
             .addConnectionCallbacks(this)
             .addOnConnectionFailedListener(this)
             .addApi(LocationServices.API)
             .build();
 
-
         locationRequest = new LocationRequest()
                 .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
                 .setInterval(60 * 1000)        // 60 seconds, in milliseconds
                 .setFastestInterval(1 * 1000); // 1 second, in milliseconds
-
-
-
 
         Intent loginIntent = getIntent();
         current_username = loginIntent.getStringExtra("CURRENT_USERNAME");
@@ -108,8 +102,6 @@ public class OptionChooserActivity extends Activity implements
 
 
 
-
-
     @Override
     protected void onStart() {
         super.onStart();
@@ -120,6 +112,35 @@ public class OptionChooserActivity extends Activity implements
     protected void onStop() {
         super.onStop();
         googleApiClient.disconnect();
+    }
+
+    @Override
+    public void onConnected(Bundle bundle) {
+        Log.i(TAG, "Connected to GoogleApiClient");
+        currentLocation = LocationServices.FusedLocationApi.getLastLocation(googleApiClient);
+        if (currentLocation == null) {
+            Log.i(TAG, "Last location not available, request location updates");
+            LocationServices.FusedLocationApi.requestLocationUpdates(googleApiClient, locationRequest, this);
+        } else {
+            currentLat = currentLocation.getLatitude();
+            currentLng = currentLocation.getLongitude();
+        }
+    }
+
+    @Override
+    public void onConnectionSuspended(int i) {
+        Log.i(TAG, "Location services connection has been suspended");
+        googleApiClient.connect();
+    }
+
+    @Override
+    public void onConnectionFailed(ConnectionResult connectionResult) {
+        Log.i(TAG, "Connection failed: ConnectionResult.getErrorCode() = " + connectionResult.getErrorCode());
+    }
+
+    @Override
+    public void onLocationChanged(Location location) {
+        currentLocation = location;
     }
 
 
@@ -142,11 +163,8 @@ public class OptionChooserActivity extends Activity implements
                     new fetchLatLongFromService(place);
             fetch_latlng_from_service.execute();
         }
-
     }
 
-
-//Sometimes happens that device gives location = null
 
     private class fetchLatLongFromService extends AsyncTask<Void, Void, StringBuilder> {
 
@@ -161,7 +179,7 @@ public class OptionChooserActivity extends Activity implements
         protected StringBuilder doInBackground(Void... params) {
 
             try {
-                HttpURLConnection conn = null;
+                HttpURLConnection conn;
                 StringBuilder jsonResults = new StringBuilder();
                 String googleMapUrl = "http://maps.googleapis.com/maps/api/geocode/json?address="
                         + this.place + "&sensor=false";
@@ -211,7 +229,6 @@ public class OptionChooserActivity extends Activity implements
                 if(!location.equals("")) {
                     getLatLongFromPlace(location);
                 }
-                Toast.makeText(OptionChooserActivity.this, "lat:" + lat + "lng:" + lng, Toast.LENGTH_LONG ).show();
                 String radius = String.valueOf(radiusET.getText());
                 String interest = String.valueOf(interestET.getText());
                 String resultNumber = String.valueOf(resultNumberET.getText());
@@ -243,6 +260,9 @@ public class OptionChooserActivity extends Activity implements
             public void onClick(View v) {
 
                 String location = String.valueOf(locationET.getText());
+                if(!location.equals("")) {
+                    getLatLongFromPlace(location);
+                }
                 String radius = String.valueOf(radiusET.getText());
                 String interest = String.valueOf(interestET.getText());
                 String resultNumber = String.valueOf(resultNumberET.getText());
@@ -298,43 +318,16 @@ public class OptionChooserActivity extends Activity implements
     }
 
     private void setUpSignOut() {
-
         signOutButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Twitter.getSessionManager().clearActiveSession();
+                Digits.getSessionManager().clearActiveSession();
+                Toast.makeText(OptionChooserActivity.this,"You have successfully signed out!", Toast.LENGTH_SHORT).show();
                 finish();
             }
         });
     }
-
-
-    @Override
-    public void onConnected(Bundle bundle) {
-        currentLocation = LocationServices.FusedLocationApi.getLastLocation(googleApiClient);
-        if (currentLocation == null) {
-            LocationServices.FusedLocationApi.requestLocationUpdates(googleApiClient, locationRequest, this);
-        } else {
-            currentLat = currentLocation.getLatitude();
-            currentLng = currentLocation.getLongitude();
-        }
-    }
-
-    @Override
-    public void onConnectionSuspended(int i) {
-        Toast.makeText(this, "Location services connection has been suspended", Toast.LENGTH_LONG).show();
-    }
-
-    @Override
-    public void onConnectionFailed(ConnectionResult connectionResult) {
-                Toast.makeText(this, "Location services connection failed", Toast.LENGTH_LONG).show();
-    }
-
-    @Override
-    public void onLocationChanged(Location location) {
-        currentLocation = location;
-    }
-
-
 
 }
 

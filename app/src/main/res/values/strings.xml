@@ -5,8 +5,8 @@
     <string name="sign_in_with_phone">Sign in with Phone</string>
     <string name="toast_twitter_signin_fail">It was not possible to Sign in with Twitter, try again later</string>
     <string name="toast_twitter_digits_fail">It was not possible to Sign up with your Phone, try again later</string>
-    <string name="toast_twitter_signin_success">Login success: twitter account active</string>
-    <string name="toast_twitter_digits_success">Login success: digits account active</string>
+    <string name="toast_twitter_signin_success">Login success:Twitter account active</string>
+    <string name="toast_twitter_digits_success">Login success: Digits account active</string>
     <string name="skip_login">Skip</string>
     <string name="search_tweets">Search Tweets</string>
     <string name="search_profile">Search Profile</string>

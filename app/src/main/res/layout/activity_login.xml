@@ -11,7 +11,7 @@
 
     <ImageView
         android:id="@+id/LogoView"
-        android:layout_marginTop="50dp"
+        android:layout_marginTop="40dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:contentDescription="@string/content_desc_icon"
@@ -55,7 +55,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/digit_auth_button"
-        android:layout_marginTop="40dp"
+        android:layout_marginTop="50dp"
         android:text="@string/skip_login"
         android:textSize="16sp"
         android:textColor="@color/twitter_logo_blue"

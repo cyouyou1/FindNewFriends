@@ -30,8 +30,6 @@ import com.twitter.sdk.android.core.identity.TwitterLoginButton;
 import io.fabric.sdk.android.Fabric;
 
 
-//TODO:network suspended problem for nexus 6
-
 public class LoginActivity extends Activity {
 
     // Note: Your consumer key and secret should be obfuscated in your source code before shipping.
@@ -68,7 +66,6 @@ public class LoginActivity extends Activity {
                         getResources().getString(R.string.toast_twitter_signin_success),
                         Toast.LENGTH_SHORT).show();
                 current_username = result.data.getUserName();
-
                 startOptionChooser();
             }
 

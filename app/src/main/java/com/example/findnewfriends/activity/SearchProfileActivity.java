@@ -20,10 +20,8 @@ import android.widget.Toast;
 
 import com.example.findnewfriends.model.HttpManager;
 import com.example.findnewfriends.R;
-import com.example.findnewfriends.model.Tweet;
 import com.example.findnewfriends.model.UserProfile;
 import com.example.findnewfriends.parser.ProfileJSONParser;
-import com.example.findnewfriends.parser.TweetJSONParser;
 import com.example.findnewfriends.adapter.ProfileAdapter;
 
 import java.io.InputStream;
@@ -46,6 +44,7 @@ public class SearchProfileActivity extends AppCompatActivity {
     private int resultNumber;
     private String interest_query;
 
+    private static final double MILES_TO_METERS =1609.34;
     private static final int DEFAULT_RADIUS_IN_MILES = 10;
     private static final int DEFAULT_RESULTS_NUMBER = 20;
 
@@ -84,9 +83,9 @@ public class SearchProfileActivity extends AppCompatActivity {
         }
 
         if(radius_string.equals("")){
-            radius_meters = DEFAULT_RADIUS_IN_MILES * 1609.34;
+            radius_meters = DEFAULT_RADIUS_IN_MILES * MILES_TO_METERS;
         }else {
-            radius_meters = Double.parseDouble(radius_string) * 1609.34;
+            radius_meters = Double.parseDouble(radius_string) * MILES_TO_METERS;
         }
 
         interest_query = Uri.encode(interest_string);
@@ -122,6 +121,8 @@ public class SearchProfileActivity extends AppCompatActivity {
         if (id == R.id.heat_map ) {
             Intent intent = new Intent(SearchProfileActivity.this, HeatMapActivity.class);
             Bundle extras = new Bundle();
+            extras.putDouble("EXTRA_LATITUDE", latitude);
+            extras.putDouble("EXTRA_LONGITUDE", longitude);
             extras.putString("EXTRA_SEARCH_URL", profileSearchUrl);
             extras.putString("CALLING_ACTIVITY","searchProfile");
             intent.putExtras(extras);
@@ -148,7 +149,6 @@ public class SearchProfileActivity extends AppCompatActivity {
             finish();
             return true;
         }
-
         return false;
     }
 
@@ -225,7 +225,6 @@ public class SearchProfileActivity extends AppCompatActivity {
                 Toast.makeText(SearchProfileActivity.this, "Cannot connect to web service", Toast.LENGTH_LONG).show();
                 return;
             }
-
             updateDisplay();
         }
     }

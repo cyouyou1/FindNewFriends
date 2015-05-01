@@ -5,11 +5,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.view.View;
-import android.view.Window;
-import android.webkit.WebChromeClient;
-import android.webkit.WebView;
-import android.widget.ProgressBar;
+
 
 import com.example.findnewfriends.R;
 
@@ -17,8 +13,6 @@ import com.example.findnewfriends.R;
 public class SearchTimelineActivity extends Activity {
 
     private final String BaseUrl = "http://quiteconfused.ddns.net/py/hello.py/handler?";
-
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

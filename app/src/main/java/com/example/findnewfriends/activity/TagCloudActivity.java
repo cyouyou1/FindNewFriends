@@ -11,23 +11,18 @@ import com.example.findnewfriends.R;
 import com.example.findnewfriends.model.StopWords;
 import com.example.findnewfriends.model.Tag;
 import com.example.findnewfriends.model.TagFrequency;
-import com.example.findnewfriends.model.Tweet;
 import com.example.findnewfriends.model.UserProfile;
 import com.example.findnewfriends.parser.ProfileJSONParser;
-import com.example.findnewfriends.parser.TweetJSONParser;
 import com.example.findnewfriends.view.TagCloudView;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-//TODO: tag cloud position issue, maybe integrate number of result?
-
 public class TagCloudActivity extends Activity {
 
     private String searchUrl;
     private TagCloudView mTagCloudView;
-	private final String TAG = "cloudtag";
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {

@@ -14,7 +14,6 @@ import com.example.findnewfriends.model.Tweet;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 

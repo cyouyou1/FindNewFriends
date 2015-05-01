@@ -40,7 +40,6 @@ public class UserProfile {
         this.user_screen_name = user_screen_name;
     }
 
-
     public LatLng getLatLng() {
         return latLng;
     }

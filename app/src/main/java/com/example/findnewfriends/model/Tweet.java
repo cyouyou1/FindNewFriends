@@ -17,8 +17,6 @@ public class Tweet {
     private String user_description;
 
 
-
-
     public String getTweet_text() {
         return tweet_text;
     }
@@ -34,7 +32,6 @@ public class Tweet {
     public void setProfile_image_url(String profile_image_url) {
         this.profile_image_url = profile_image_url;
     }
-
 
     public String getCreated_at() {
         return created_at;
