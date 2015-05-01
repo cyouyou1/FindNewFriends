@@ -23,6 +23,8 @@ public class TagCloudActivity extends Activity {
 
     private String searchUrl;
     private TagCloudView mTagCloudView;
+    //TODO: Please change WINDOW_SIZE so that the tag cloud ball is centered on the screen.
+    private static final int WINDOW_SIZE = 1800;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -76,31 +78,11 @@ public class TagCloudActivity extends Activity {
         @Override
         protected void onPostExecute(List<Tag> tagList) {
             LinearLayout container = (LinearLayout) findViewById(R.id.container);
-            mTagCloudView = new TagCloudView(TagCloudActivity.this, 720, 720, tagList, 0, 40); // passing
+            mTagCloudView = new TagCloudView(TagCloudActivity.this, WINDOW_SIZE, WINDOW_SIZE, tagList, 0, 0); // passing
             mTagCloudView.requestFocus();
             mTagCloudView.setFocusableInTouchMode(true);
             container.addView(mTagCloudView);
         }
     }
-
-
-//	public boolean dispatchTouchEvent(MotionEvent e) {
-//
-//		boolean result = mTagCloudView.dispatchTouchEvent(e);
-//		// boolean result = true;
-//		Log.d(TAG, getTime() + "super dispatching ... result is [" + result + "] action is [" + e.getAction() + "]");
-//		return result;
-//	}
-
-	private String getTime() {
-
-		return "[" + System.currentTimeMillis() + "] ";
-	}
-
-//	public boolean onTouchEvent(MotionEvent e) {
-//		Log.d(TAG, getTime() + "super movition:x=" + e.getX() + ",y=" + e.getY() + ",action is [" + e.getAction() + "]");
-//		return mTagCloudView.onTouchEvent(e);
-//	}
-
 
 }

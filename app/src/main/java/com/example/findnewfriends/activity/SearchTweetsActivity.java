@@ -30,7 +30,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class SearchTweetsActivity extends AppCompatActivity {
-//TODO: add sent tweet function
+
     private ListView lv;
     private ProgressBar pb;
     private List<MyTask> tasks;

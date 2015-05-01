@@ -30,7 +30,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class SearchProfileActivity extends AppCompatActivity {
-    //TODO: modify database
 
     private ListView lv;
     private ProgressBar pb;

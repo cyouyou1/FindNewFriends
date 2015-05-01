@@ -10,12 +10,14 @@ import java.util.TreeMap;
 
 public class TagFrequency {
 
+    public static final int NUMBER_OF_TAGS = 20;
+
     public static List<Tag> createTags( Map<String, Integer> words_count_map) {
 
-        List<Tag> tagList = new ArrayList<Tag>();
+        List<Tag> tagList = new ArrayList<>();
         TreeMap<String, Integer> sorted_words_count_map = sortByValue(words_count_map);
         Iterator<Map.Entry<String, Integer>> iterator = sorted_words_count_map.entrySet().iterator();
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < NUMBER_OF_TAGS; i++) {
             Map.Entry<String, Integer> result = iterator.next();
             tagList.add(new Tag(result.getKey(), result.getValue()));
         }
