@@ -13,6 +13,8 @@ import com.example.findnewfriends.R;
 public class SearchTimelineActivity extends Activity {
 
     private final String BaseUrl = "http://quiteconfused.ddns.net/py/hello.py/handler?";
+    private static final int DEFAULT_RADIUS_IN_MILES = 10;
+    private static final int DEFAULT_RESULTS_NUMBER = 20;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,8 +35,8 @@ public class SearchTimelineActivity extends Activity {
 
         String username_query = (username_string.equals("")) ? Uri.encode(current_username_string) : Uri.encode(username_string);
         String location_query = (location_string.equals("")) ? ("&latlng=" + current_lat + "," + current_lng) : ("&location=" + Uri.encode(location_string));
-        String radius_query = (radius_string.equals("")) ? "10" : Uri.encode(radius_string);
-        String resultNumber_query = (resultNumber_string.equals("")) ? "50" : Uri.encode(resultNumber_string);
+        String radius_query = (radius_string.equals("")) ? Integer.toString(DEFAULT_RADIUS_IN_MILES) : Uri.encode(radius_string);
+        String resultNumber_query = (resultNumber_string.equals("")) ? Integer.toString(DEFAULT_RESULTS_NUMBER) : Uri.encode(resultNumber_string);
 
 
         String search_timeline_url = BaseUrl + "user=" + username_query + location_query + "&radius=" + radius_query + "&count=" + resultNumber_query;
