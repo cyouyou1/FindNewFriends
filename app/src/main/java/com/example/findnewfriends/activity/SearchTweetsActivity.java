@@ -46,7 +46,6 @@ public class SearchTweetsActivity extends AppCompatActivity {
     private static final int DEFAULT_RESULTS_NUMBER = 20;
 
 
-
     private final String BASEURL_SEARCH_TWEETS  = "https://api.mongolab.com/api/1/databases/twitter_db/collections/geo_tweets/?";
     private final String APIKEY_SEARCH_TWEETS = "5xOXnbzry10fFTmd28DOX4y_TzKwYT4n";
 
